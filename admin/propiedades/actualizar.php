@@ -102,24 +102,35 @@
 
     if(empty($errores)) {
 
+        //Crear Carpeta
+        $carpetaImagenes = '../../imagenes/';
+
+        if(!is_dir($carpetaImagenes)){
+            mkdir(($carpetaImagenes));
+        }
+
+        $nombreImagen = '';
+
         /**Subida de Archivos**/
 
-        //Crear Carpeta
-        // $carpetaImagenes = '../../imagenes/';
+        if($imagen['name']){
+            //Elimina la imagen previa
 
-        // if(!is_dir($carpetaImagenes)){
-        //     mkdir(($carpetaImagenes));
-        // }
+            unlink($carpetaImagenes . $propiedad['imagen']);
 
-        // //Generar un nombre unico
-        // $nombreImagen = md5(uniqid( rand(), true)) . ".jpg" ;
+            //Generar un nombre unico
+            $nombreImagen = md5(uniqid( rand(), true)) . ".jpg" ;
 
-        // //subir la imagen
+            //subir la imagen
+    
+            move_uploaded_file($imagen['tmp_name'], $carpetaImagenes . $nombreImagen);
+        } else {
+            $nombreImagen = $propiedad['imagen'];
+        }
 
-        // move_uploaded_file($imagen['tmp_name'], $carpetaImagenes . $nombreImagen);
 
         //Insertar en la base de datos
-        $query = " UPDATE propiedades SET titulo = '${titulo}', precio = '${precio}', descripcion = '${descripcion}', habitaciones = ${habitaciones}, wc = ${wc}, estacionamiento = ${estacionamiento}, vendedorId = ${vendedorId} WHERE id = ${id} ";
+        $query = " UPDATE propiedades SET titulo = '${titulo}', precio = '${precio}', imagen = '${nombreImagen}', descripcion = '${descripcion}', habitaciones = ${habitaciones}, wc = ${wc}, estacionamiento = ${estacionamiento}, vendedorId = ${vendedorId} WHERE id = ${id} ";
 
         //  echo $query;
 
